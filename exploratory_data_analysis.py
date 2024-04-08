@@ -18,9 +18,9 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', 500)
 
 class CFG:
-    root_dir = Path("/scratch/wpy2004/rds_project/data/")
-    train_dir = Path("/scratch/wpy2004/rds_project/data/parquet_files/train")
-    test_dir = Path("/scratch/wpy2004/rds_project/data/parquet_files/test")
+    root_dir = Path("../data/")
+    train_dir = Path("../data/parquet_files/train")
+    test_dir = Path("../data/parquet_files/test")
 
 # if __name__ == '__main__':
 #     with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'max_colwidth', 400): 
