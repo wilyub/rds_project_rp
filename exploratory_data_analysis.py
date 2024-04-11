@@ -350,3 +350,49 @@ if __name__ == '__main__':
     credit_bureau_a_2_train_df.describe()
     credit_bureau_a_2_train_df[credit_bureau_a_2_train_df.case_id == 405]
     breakpoint()
+
+    base_files = [
+        "_static_cb_0.parquet",
+        "_static_0_*.parquet",
+        "_applprev_1_*.parquet",
+        "_tax_registry_a_1.parquet",
+        "_tax_registry_b_1.parquet",
+        "_tax_registry_c_1.parquet",
+        "_other_1.parquet",
+        "_person_1.parquet",
+        "_deposit_1.parquet",
+        "_debitcard_1.parquet",
+        "_credit_bureau_b_1.parquet",
+        "_credit_bureau_b_2.parquet",
+    ]
+    base_agg = Aggregator(
+        num_aggregators = [pl.max, pl.min, pl.first, pl.last, pl.mean],
+        str_aggregators = [pl.max, pl.min, pl.first, pl.last],
+        group_aggregators = [pl.max, pl.min, pl.first, pl.last],
+        str_mode = True
+    )
+    train_base_df = prepare_df(base_files, CFG.train_dir, base_agg)
+    cat_cols_base = list(train_base_df.select_dtypes("category").columns)
+
+    test_base_df = prepare_df(
+        base_files, CFG.test_dir, base_agg, mode="test", cat_cols=cat_cols_base, train_cols=train_base_df.columns
+    )
+
+    train_base_df.to_parquet("train_base.parquet")
+    credit_bureau_a_1_train_df.to_parquet("credit_bureau_a_1_train_df.parquet")
+    credit_bureau_a_2_train_df.to_parquet("credit_bureau_a_2_train_df.parquet")
+
+    print("Train is duplicated:\t", train_base_df["case_id"].duplicated().any())
+    print("Train Week Range:\t", (train_base_df["WEEK_NUM"].min(), train_base_df["WEEK_NUM"].max()))
+
+    print()
+
+    print("Test is duplicated:\t", test_base_df["case_id"].duplicated().any())
+    print("Test Week Range:\t", (test_base_df["WEEK_NUM"].min(), test_base_df["WEEK_NUM"].max()))
+
+    sns.lineplot(
+        data=train_base_df,
+        x="WEEK_NUM",
+        y="target",
+    )
+    plt.savefig("test.png")
