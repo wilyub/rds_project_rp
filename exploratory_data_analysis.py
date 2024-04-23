@@ -349,7 +349,6 @@ if __name__ == '__main__':
 
     credit_bureau_a_2_train_df.describe()
     credit_bureau_a_2_train_df[credit_bureau_a_2_train_df.case_id == 405]
-    breakpoint()
 
     base_files = [
         "_static_cb_0.parquet",
@@ -373,6 +372,7 @@ if __name__ == '__main__':
     )
     train_base_df = prepare_df(base_files, CFG.train_dir, base_agg)
     cat_cols_base = list(train_base_df.select_dtypes("category").columns)
+    breakpoint()
 
     test_base_df = prepare_df(
         base_files, CFG.test_dir, base_agg, mode="test", cat_cols=cat_cols_base, train_cols=train_base_df.columns
